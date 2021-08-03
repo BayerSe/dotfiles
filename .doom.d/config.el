@@ -102,8 +102,8 @@
 )
 
 
-;; org-roami
-
+;; org-roam
+(setq org-roam-v2-ack t)
 
 ; Update timestamp on save
 (add-hook 'org-mode-hook (lambda ()
@@ -114,20 +114,9 @@
                                          time-stamp-format "\[%Y-%m-%d %a %H:%M:%S\]")
                              (add-hook 'before-save-hook 'time-stamp nil 'local)))
 
-
-(setq org-roam-v2-ack t)
 (use-package! org-roam
   :after org
- ; :commands
-  ;(org-roam-buffer
-  ; org-roam-setup
-   ;org-roam-capture
-   ;org-roam-node-find)
   :config
-  ;;(setq org-roam-mode-sections
-  ;;      (list #'org-roam-backlinks-insert-section
-  ;;            #'org-roam-reflinks-insert-section
-  ;;            #'org-roam-unlinked-references-insert-section))
   (org-roam-setup))
 
 
@@ -143,20 +132,16 @@
 
 (setq org-roam-capture-templates
       '(
-        ("d" "default" plain "%?"
-         :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
-                            "#+title: ${title}\n")
-         :unnarrowed t)
         ("t" "topic" plain "%?"
          :if-new (file+head "topic/${slug}.org"
                             "#+title: ${title}\n#+created: %u\n#+last_modified: <>\n")
          :unnarrowed t)
         ("p" "people" plain "%?"
          :if-new (file+head "people/${slug}.org"
-                            "#+title: ${title}\n")
-         :unnarrowed t)
+                            "#+title: ${title}\n#+created: %u\n#+last_modified: <>\n")
+        :unnarrowed t)
 
         ))
 
-;; Insert link when adding an attachment
+; Insert link when adding an attachment
 (setq org-attach-store-link-p 'attached)
