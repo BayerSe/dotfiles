@@ -5,30 +5,13 @@
 
 ;;;; Visual appearance
 (setq doom-theme 'doom-one)
-(setq display-line-numbers-type t)
-
 
 ;;;; org-mode
-(setq org-directory "~/org/")
-
 ;; Insert link when adding an attachment
-(setq org-attach-store-link-p 'attached)    
+;(setq org-attach-store-link-p 'attached)    
 
 ;; Ensure logging intwo drawer
-(setq org-log-into-drawer t)
-
-;; Allow folding from text below headline
-(setq org-cycle-emulate-tab 'white)
-
-;; Capture templates
-(after! org
-  (setq org-capture-templates '())  ; Clear Doom's default templates
-
-  (add-to-list 'org-capture-templates
-               `("b" "Add book" entry (file+headline "~/org/notes.org" "Books to read")
-                 "* SOMEDAY Book: %^{Author} - %^{Titel}\n  :PROPERTIES:\n  :Author: %\\1\n  :Title: %\\2\n  :END:\n  :LOGBOOK:\n  - Recommended by: %?\n  - Added: %U\n  :END:"
-                 ))
-  )
+;(setq org-log-into-drawer t)
 
 ;; Fold to region as in workflowy, see https://www.reddit.com/r/emacs/comments/b8jqor/making_orgmode_narrowing_as_intuitive_as_workflow/
 (after! org
@@ -63,24 +46,6 @@
 
 
 ;;;; org-roam
-(setq org-roam-v2-ack t)
-
-(use-package! org-roam
-  :after org
-  :config
-  (org-roam-setup))
-
-
-(map! :leader
-      (:prefix ("r" . "org-roam")
-        :desc "Find node"                       "f" #'org-roam-node-find
-        :desc "Insert node"                     "i" #'org-roam-node-insert
-        :desc "Graph"                           "g" #'org-roam-graph
-        :desc "Capture"                         "c" #'org-roam-capture
-        :desc "Daily today"                     "t" #'org-roam-dailies-find-today
-        :desc "Daily select day"                "d" #'org-roam-dailies-find-date
-        ))
-
 ;; Update timestamp on save
 (add-hook 'org-mode-hook (lambda ()
                              (setq-local time-stamp-active t
