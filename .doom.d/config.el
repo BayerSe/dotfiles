@@ -11,7 +11,8 @@
 ;(setq org-attach-store-link-p 'attached)    
 
 ;; Ensure logging intwo drawer
-;(setq org-log-into-drawer t)
+(setq org-log-into-drawer t)
+
 
 ;; Fold to region as in workflowy, see https://www.reddit.com/r/emacs/comments/b8jqor/making_orgmode_narrowing_as_intuitive_as_workflow/
 (after! org
@@ -46,6 +47,34 @@
 
 
 ;;;; org-roam
+
+;; copied from modules/config/default/+evil-bindings.el
+(map! :leader
+      (:prefix ("r" . "roam")
+       :desc "Open random node"           "a" #'org-roam-node-random
+       :desc "Find node"                  "f" #'org-roam-node-find
+       :desc "Find ref"                   "F" #'org-roam-ref-find
+       :desc "Show graph"                 "g" #'org-roam-graph
+       :desc "Insert node"                "i" #'org-roam-node-insert
+       :desc "Capture to node"            "n" #'org-roam-capture
+       :desc "Toggle roam buffer"         "r" #'org-roam-buffer-toggle
+       :desc "Launch roam buffer"         "R" #'org-roam-buffer-display-dedicated
+       :desc "Sync database"              "s" #'org-roam-db-sync
+       (:prefix ("d" . "by date")
+        :desc "Goto previous note"        "b" #'org-roam-dailies-goto-previous-note
+        :desc "Goto date"                 "d" #'org-roam-dailies-goto-date
+        :desc "Capture date"              "D" #'org-roam-dailies-capture-date
+        :desc "Goto next note"            "f" #'org-roam-dailies-goto-next-note
+        :desc "Goto tomorrow"             "m" #'org-roam-dailies-goto-tomorrow
+        :desc "Capture tomorrow"          "M" #'org-roam-dailies-capture-tomorrow
+        :desc "Capture today"             "n" #'org-roam-dailies-capture-today
+        :desc "Goto today"                "t" #'org-roam-dailies-goto-today
+        :desc "Capture today"             "T" #'org-roam-dailies-capture-today
+        :desc "Goto yesterday"            "y" #'org-roam-dailies-goto-yesterday
+        :desc "Capture yesterday"         "Y" #'org-roam-dailies-capture-yesterday
+        :desc "Find directory"            "-" #'org-roam-dailies-find-directory)))
+
+
 ;; Update timestamp on save
 (add-hook 'org-mode-hook (lambda ()
                              (setq-local time-stamp-active t
@@ -66,8 +95,11 @@
         ("p" "people" plain "%?"
          :if-new (file+head "people/${slug}.org"
                             "#+title: ${title}\n#+created: %u\n#+last_modified: <>\n")
+         :unnarrowed t)
+        ("r" "bibliography reference" plain "%?"
+         :if-new (file+head "references/${citekey}.org"
+                            "#+title: ${title}\n#+created: %u\n#+last_modified: <>\n")
         :unnarrowed t)
-
         ))
 
 
@@ -86,3 +118,13 @@
           org-roam-ui-follow t
           org-roam-ui-update-on-save t
           org-roam-ui-open-on-start t))
+
+
+(use-package! org-roam-bibtex
+  :after org-roam
+  :config
+  (require 'org-ref)) ; optional: if Org Ref is not loaded anywhere else, load it here
+
+
+(setq bibtex-completion-bibliography
+      '("/home/sebastian/org/roam/library.bib"))
