@@ -128,3 +128,5 @@
 
 (setq bibtex-completion-bibliography
       '("/home/sebastian/org/roam/library.bib"))
+
+(setq orb-bibtex-entry-get-value-function #'bibtex-completion-get-value)
