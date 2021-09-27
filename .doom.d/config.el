@@ -85,6 +85,24 @@
                              (add-hook 'before-save-hook 'time-stamp nil 'local)))
 
 
+;; Rename file on title change
+(add-hook! 'after-save-hook
+           (defun org-rename-to-new-title ()
+             (when-let*
+                 ((old-file (buffer-file-name))
+                  (is-roam-file (org-roam-file-p old-file))
+                  (file-node (save-excursion
+                               (goto-char 1)
+                               (org-roam-node-at-point)))
+                  (slug (org-roam-node-slug file-node))
+                  (new-file (expand-file-name (concat slug ".org")))
+                  (different-name? (not (string-equal old-file new-file))))
+               (rename-buffer new-file)
+               (rename-file old-file new-file)
+               (set-visited-file-name new-file)
+               (set-buffer-modified-p nil))))
+
+
 ;; Capture templates
 (setq org-roam-capture-templates
       '(
@@ -119,7 +137,7 @@
           org-roam-ui-update-on-save t
           org-roam-ui-open-on-start t))
 
-
+;; org-roam bibtex
 (use-package! org-roam-bibtex
   :after org-roam
   :config
